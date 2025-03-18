@@ -1,0 +1,26 @@
+:root{
+    --top-nav-bg: #ed6363;
+    --side-nav-bg: #d1aaaa;
+    --side-nav-li-bg: #eaa8a8;
+    --side-nav-li-bg-hover: #db8c8c;
+    --side-nav-cul-bg: #a9a0a0;
+    --side-nav-li-c-bg-hover: #cb8181;
+    --side-nav-li-font-color: #272525;
+    --table-border: #b4b0b0;
+    --nav-ul-bg: #e4e0e0;
+
+    --base-bg: #ede4d3;
+    --side-bg: #F7EEDD;
+    --base-font: #2c2c2c;
+    --banner-font: #e6e2e2;
+    --banner-active: #c64518;
+    --btn-login: #FF7F50;
+    --btn-login-shdow: #e6ddcb;
+    --btn-login-shdow-hover: #e1d7c5;
+    --btn-login-hover: #dd6236;
+
+    --input-base: #e1dbd8;
+
+
+    --side-font-active:#FF7F50;
+}

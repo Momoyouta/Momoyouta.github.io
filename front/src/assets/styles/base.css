@@ -1,0 +1,39 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+li{
+    list-style: none;
+    caret-color: transparent;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+body{
+    background-color: var(--base-bg);
+}
+input{
+    outline: none;
+}
+
+textarea{
+    outline: none;
+    resize: none;
+}
+
+html{
+    font-size: 120%;
+}
+
+@media screen and (max-width: 1180px) {
+    html{
+        font-size: 80%;
+    }
+}

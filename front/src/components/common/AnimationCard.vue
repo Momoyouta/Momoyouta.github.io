@@ -1,0 +1,86 @@
+<template>
+  <a :href="aniUrl" class="container-card">
+    <div class="err" :style="{background: 'url('+errImgUrl+') no-repeat center center / cover'}">
+      <div class="cover" :style="{background: 'url('+ani.image+') no-repeat center center / cover'}">
+        <span class="date" v-if="showCon.score">{{ani.score}}</span>
+        <span class="date" v-if="showCon.date">{{ani.updateTime}}</span>
+        <span class="date" v-if="showCon.score">{{ani.score}}</span>
+        <span class="title" v-if="showCon.state">{{ aniState }}</span>
+      </div>
+    </div>
+    <div class="content" v-if="showCon.name">
+      {{ ani.name }}
+    </div>
+  </a>
+</template>
+
+<script setup>
+import {computed, ref} from "vue";
+import errImgUrl from "/src/assets/img/ani_add_error.png";
+const props=defineProps({
+  showCon: {
+    type: Object,
+    required: true
+  },
+  ani: {
+    type: Object,
+    required: true
+  }
+});
+const aniUrl=ref("www.baidu.com");
+const aniState=computed(()=> {
+  return props.ani.end==1? props.ani.ep+"集全":"更新至第"+props.ani.ep+"集"
+})
+</script>
+
+<style scoped>
+a{
+  text-decoration:none;
+}
+
+.container-card{
+  display: block;
+  width: 100%;
+  aspect-ratio: 190/280;
+
+}
+.err{
+  background-size: cover;
+  border-radius: 5%;
+}
+.cover{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  border-radius: 5%;
+  aspect-ratio: 190.5/266.7;
+}
+.date{
+  position: absolute;
+  top:0;
+  right:0;
+  border-radius: 20%;
+  padding: 1%;
+  align-items: center;
+  font-size: 70%;
+  color: white;
+  background-color: #e50914;
+}
+.title{
+  position: absolute;
+  bottom: 10%;
+  color: white;
+  font-size: 70%;
+  text-shadow: 1px 1px 1px #404040;
+}
+.content{
+  padding: 5% 0;
+  text-align: center;
+  font-size: 85%;
+  color: black;
+  height: 1.5rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap
+}
+</style>

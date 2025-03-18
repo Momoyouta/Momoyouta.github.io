@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: web_ani
+  datasource:
+    url: jdbc:mysql://localhost:3306/momoyouta_web_ani
+    username: root
+    password: a102703407
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.pptp.warmup.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
