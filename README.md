@@ -6,7 +6,8 @@
 
 ----
 
-[TOC]
+[👉点击访问👈](www.momoyouta.fun)
+[备用链接](momoyouta.github.io)
 
 ----
 
