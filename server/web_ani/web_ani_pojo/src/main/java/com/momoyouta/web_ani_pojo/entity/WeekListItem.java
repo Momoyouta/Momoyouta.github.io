@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class WeekListItem {
     @TableId(type = IdType.AUTO)
     private Long id;
-    private Long aniId;
+    private Long animeId;
     private int days;
     private LocalDateTime updateTime;
 

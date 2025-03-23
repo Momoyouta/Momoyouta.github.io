@@ -13,8 +13,8 @@ import java.util.List;
 @Mapper
 public interface WeekListMapper extends BaseMapper<WeekListItem> {
 
-    @Select("select  ani_id from momoyouta_web_ani.week_ani_list where days=#{day}")
-    List<Integer> getAniId(int day);
+    @Select("select  anime_id from momoyouta_web_ani.week_ani_list where days=#{day}")
+    List<Long> getAniId(int day);
 
     @Delete("delete from momoyouta_web_ani.week_ani_list where days=#{day}")
     void delByDay(int day);

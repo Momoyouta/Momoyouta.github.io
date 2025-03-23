@@ -1,5 +1,6 @@
 export const AXIOS_URL ={
-    BASIC:'http://123.57.20.40:8080',
+    BASIC:'https://momoyouta.asia:443',
+    //BASIC:'http://localhost:8080',
     ADD_ANI:'/admin/ani/add',
     SEARCH_ANI:'/ani/search',
     SEARCH_PAGE_ANI:'/ani/search/page',

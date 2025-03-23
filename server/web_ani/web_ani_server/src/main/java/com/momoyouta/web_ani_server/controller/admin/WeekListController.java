@@ -26,11 +26,13 @@ public class WeekListController {
     @GetMapping("/request")
     public Result<List<Animation>> getDaylist(@RequestParam Integer day){
         log.info(day.toString());
-        List<Integer> idList=weekListService.getDayAnis(day);
+        List<Long> idList=weekListService.getDayAnis(day);
         log.info(idList.toString());
         List<Animation> aniList=new ArrayList<>();
-        for(Integer id : idList){
-            aniList.add(aniService.getById(id));
+        for(Long id : idList){
+            Animation animation=aniService.getById(id);
+            animation.setDescription("");
+            aniList.add(animation);
         }
         log.info(aniList.toString());
         return Result.success(aniList);
@@ -41,6 +43,13 @@ public class WeekListController {
         log.info(dayList.toString());
         weekListService.updateDayList(dayList,day);
         return Result.success("更新成功");
+    }
+
+    @GetMapping ("/request/quarter")
+    public Result<List<List<Animation>>> getQuarterlist(@RequestParam String quarter){
+        log.info(quarter);
+        List<List<Animation>> list= weekListService.getQuarterAnime(quarter);
+        return Result.success(list);
     }
 
 }

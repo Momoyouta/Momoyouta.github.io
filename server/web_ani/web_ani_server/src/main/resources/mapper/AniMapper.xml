@@ -2,5 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momoyouta.web_ani_server.mapper.AniMapper">
-
+    <select id="getByDirCondition" resultType="com.momoyouta.web_ani_pojo.entity.Animation">
+        SELECT
+        base.* ,info.start_date  FROM (
+        SELECT animation.*   FROM animation
+        INNER JOIN  animeatags tags
+        ON animation.id = tags.anime_id
+        WHERE  tags.tag_id = #{tagId}) base
+        LEFT JOIN animeinfo_list info
+        ON base.id = info.anime_id
+        WHERE info.start_date LIKE CONCAT(#{year}, '%')
+        ORDER BY
+        <choose>
+            <when test="orderr == 0">base.score DESC</when>
+            <when test="orderr == 1">info.start_date DESC</when>
+            <otherwise> base.score DESC</otherwise>
+        </choose>
+        LIMIT
+        #{offset}, #{pageSize}
+    </select>
 </mapper>

@@ -3,10 +3,19 @@ package com.momoyouta.web_ani_server.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.momoyouta.web_ani_common.result.Result;
+import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
+import com.momoyouta.web_ani_pojo.dto.DirCondition;
 import com.momoyouta.web_ani_pojo.entity.Animation;
+import com.momoyouta.web_ani_pojo.entity.AnimeAtags;
+import com.momoyouta.web_ani_pojo.entity.AnimeInfo;
+import com.momoyouta.web_ani_pojo.entity.AnimeRating;
 import com.momoyouta.web_ani_server.mapper.AniMapper;
+import com.momoyouta.web_ani_server.mapper.AnimeAndTagsMapper;
+import com.momoyouta.web_ani_server.mapper.AnimeInfoMapper;
+import com.momoyouta.web_ani_server.mapper.AnimeRatingMapper;
 import com.momoyouta.web_ani_server.service.AniService;
+import com.momoyouta.web_ani_server.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +32,24 @@ public class AniServiceImpl implements AniService {
     @Autowired
     private AniMapper aniMapper;
 
+    @Autowired
+    private AnimeInfoMapper infoMapper;
+
+    @Autowired
+    private AnimeRatingMapper ratingMapper;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private AnimeAndTagsMapper animeAndTagsMapper;
+
+
     @Override
-    public Animation getById(Integer id) {
+    public Animation getById(Long id) {
         return aniMapper.getById(id);
     }
+
 
     @Override
     public Result update(Animation animation){
@@ -43,11 +66,20 @@ public class AniServiceImpl implements AniService {
         BeanUtils.copyProperties(aniAddDTO,animation);
         animation.setUpdateTime(LocalDateTime.now().withNano(0).withSecond(0));
         animation.setBan(1);
-        log.info(animation.toString());
         if(aniMapper.getByName(animation.getName())!=null){
             return Result.error("番剧已存在");
         }
+        aniMapper.insert(animation);
+        return Result.success("添加成功");
+    }
 
+    @Override
+    public Result addNoDTO(Animation animation) {
+        animation.setUpdateTime(LocalDateTime.now().withNano(0).withSecond(0));
+        animation.setBan(0);
+        if(aniMapper.getByName(animation.getName())!=null){
+            return Result.error("番剧已存在");
+        }
         aniMapper.insert(animation);
         return Result.success("添加成功");
     }
@@ -75,4 +107,64 @@ public class AniServiceImpl implements AniService {
 
         aniMapper.deleteByName(name);
     }
+
+    @Override
+    public Result addAnimeInfo(AnimeInfo animeInfo) {
+        infoMapper.insertOrUpdate(animeInfo);
+        return Result.success();
+    }
+
+    @Override
+    public Result addAnimeRating(AnimeRating animeRating) {
+        ratingMapper.insertOrUpdate(animeRating);
+        return Result.success();
+    }
+
+    @Override
+    public void addTag(Long animeId, List<String> tag) {
+        for(String i :tag){
+            Long tagId= tagService.getTagByName(i).getId();
+            AnimeAtags atags=new AnimeAtags(null,tagId,animeId);
+            animeAndTagsMapper.insertOrUpdate(atags);
+        }
+    }
+    @Override
+    public AnimeInfo getInfoByAnimeId(Long animeId) {
+        LambdaQueryWrapper<AnimeInfo> qw=new LambdaQueryWrapper<>();
+        qw.eq(AnimeInfo::getAnimeId,animeId);
+        return infoMapper.selectOne(qw);
+    }
+
+    @Override
+    public AnimeRating getRatingByAnimeId(Long animeId) {
+        LambdaQueryWrapper<AnimeRating> qw=new LambdaQueryWrapper<>();
+        qw.eq(AnimeRating::getAnimeId,animeId);
+        return ratingMapper.selectOne(qw);
+    }
+
+    @Override
+    public List<Animation> getByDirCondition(DirCondition dirCondition) {
+        if(dirCondition.getYear().equals("全部")) dirCondition.setYear("");
+        if(dirCondition.getTag().equals("全部")) dirCondition.setTag("TV");
+        dirCondition.setTagId(tagService.getTagByName(dirCondition.getTag()).getId());
+        dirCondition.setOffset(dirCondition.getOffset()* dirCondition.getPageSize());
+        List<Animation> list=aniMapper.getByDirCondition(dirCondition);
+        for (Animation animation : list) {
+            animation.setDescription(null);
+        }
+        return list;
+    }
+
+
+    @Override
+    public AnimationDetailVO getAnimeDetail(Long animeId) {
+        AnimationDetailVO detailVO=new AnimationDetailVO();
+        detailVO.setAnimation(getById(animeId));
+        detailVO.setAnimeRating(getRatingByAnimeId(animeId));
+        detailVO.setAnimeInfo(getInfoByAnimeId(animeId));
+        detailVO.setTags(tagService.getAnimeTags(animeId));
+        return detailVO;
+    }
+
+
 }

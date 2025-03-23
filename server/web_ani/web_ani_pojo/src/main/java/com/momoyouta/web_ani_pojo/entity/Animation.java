@@ -19,14 +19,12 @@ public class Animation implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;
-    private String videoAddr;
     private String image;
     private String description;
     private LocalDateTime updateTime;
-    private Integer cvList;
     private Integer score;
-    private Integer views;
     private Integer ban;
     private Integer ep;
     private Integer end;
+    //private int type;
 }

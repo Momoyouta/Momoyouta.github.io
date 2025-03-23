@@ -1,12 +1,17 @@
 server:
-  port: 8080
+  port: 443
+  address: 0.0.0.0
+  ssl:
+    protocol: TLS
+    key-store: classpath:momoyouta.asia.pfx
+    key-store-password: bm40xi6q7rw4
 spring:
   application:
     name: web_ani
   datasource:
     url: jdbc:mysql://localhost:3306/momoyouta_web_ani
-    username: root
-    password: a102703407
+    username: momo
+    password: '@Aa96938792'
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:

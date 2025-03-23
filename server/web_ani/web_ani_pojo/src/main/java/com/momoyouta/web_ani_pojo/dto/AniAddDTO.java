@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 public class AniAddDTO  implements Serializable {
     private Integer id;
     private String name;
-    private String videoAddr;
+    private String videoList;
     private String image;
     private String description;
     private String cvList;
-    private Integer ed;
+    private Integer ep;
     private Integer end;
 }

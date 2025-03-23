@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class DirCondition implements Serializable {
    private String tag;
    private String year;
-    private  int order;
+    private  int orderr;
     private int offset;
     private int pageSize;
     private Long tagId;

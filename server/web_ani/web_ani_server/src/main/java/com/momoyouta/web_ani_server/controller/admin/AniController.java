@@ -25,7 +25,7 @@ public class AniController {
     @Autowired
     private  AniService aniService;
     @GetMapping
-    public Result<Animation> getOne(@RequestParam Integer id) {
+    public Result<Animation> getOne(@RequestParam Long id) {
         Animation animation=aniService.getById(id);
         if(animation==null)
             return Result.error("番不存在");
@@ -38,18 +38,24 @@ public class AniController {
     }
 
     @GetMapping("/search/bynamelike")
-    public Result<List<Animation>> getByNamelike(@RequestParam String name,@RequestParam Integer page,@RequestParam Integer pageSize){
+    public Result<List<Animation>> getByNamelike(@RequestParam String name,@RequestParam Integer page,@RequestParam Integer pageSize,@RequestParam boolean useDscp){
         List<Animation> animationList=new ArrayList<>();
         animationList=aniService.getByNamelike(name,page,pageSize);
-        log.info(animationList.toString());
+        if(!useDscp){
+            for (Animation tp:animationList){
+                tp.setDescription("");
+            }
+        }
         return Result.success(animationList);
     }
 
     @GetMapping("/search/byname")
-    public Result<Animation> getByName(@RequestParam String name){
+    public Result<Animation> getByName(@RequestParam String name,@RequestParam boolean useDscp){
         Animation animation=new Animation();
         animation=aniService.getByName(name);
-        log.info(animation.toString());
+        if(!useDscp){
+            animation.setDescription("");
+        }
         return Result.success(animation);
     }
 
@@ -72,6 +78,11 @@ public class AniController {
         log.info(name);
         aniService.deleteByName(name);
         return  Result.success();
+    }
+
+    @GetMapping("/https")
+    public String test1(){
+        return "OK";
     }
 
 }

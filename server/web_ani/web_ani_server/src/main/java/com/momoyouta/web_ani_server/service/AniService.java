@@ -3,6 +3,7 @@ package com.momoyouta.web_ani_server.service;
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
+import com.momoyouta.web_ani_pojo.dto.DirCondition;
 import com.momoyouta.web_ani_pojo.entity.Animation;
 import com.momoyouta.web_ani_pojo.entity.AnimeInfo;
 import com.momoyouta.web_ani_pojo.entity.AnimeRating;
@@ -38,5 +39,5 @@ public interface AniService {
 
     public AnimeRating getRatingByAnimeId(Long animeId);
 
-    public List<Animation> getByDirCondition(String tag, String year, int order,int offset,int pageSize) {
+    public List<Animation> getByDirCondition(DirCondition dirCondition);
 }
