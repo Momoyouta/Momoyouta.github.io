@@ -9,7 +9,7 @@
         <span class="iconfont icon-you"></span>
       </div>
     </div>
-    <TagList class="taglist-box" :isChoose="true" :items="items"></TagList>
+    <TagList @propSelect="changeCondition(index,$event)" class="taglist-box" :isChoose="true" :items="items"></TagList>
   </div>
   <div class="aniList">
     <ul class="animes">
@@ -27,65 +27,100 @@ import AnimationCard from "@/components/common/AnimationCard.vue";
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
-const titles=['类型','地区','年份','排序']
-const tags=[['全部',"日常", "纯爱", "冒险", "科幻", "搞笑", "悬疑", "战斗", "奇幻", "校园",
-  "治愈","日常", "纯爱", "冒险",'小说改',"科幻", "搞笑", "悬疑", "战斗", "奇幻", "校园", "治愈"],
-['全部','日漫','国漫','美漫'],['全部',2022,2023,2024,2025],['时间排序','评分排序']]
-let aniCount=1;
+const titles=['类型','年份','排序']
+const tags=reactive([[],['全部',2024,2025],['时间排序','评分排序']])
 let isAll=0
+const abortController = ref(null);
+const condition=ref({
+  tag:'全部',
+  year: '全部',
+  orderr: 0, //0：时间 1：评分
+  offset: 0,
+  pageSize: 12,
+  tagId: null
+})
+let aniCount=0;
+const isUpdate=ref(true);
 const aniList=reactive([]);
 const axios_instance=axios.create({
   baseURL: `${AXIOS_URL.BASIC}`,
 })
 onMounted(()=>{
-  getData();
-  aniCount=1;
+  getHotTag();
+  selectAnimes();
   window.addEventListener("scroll",throttle(checkScroll))
 });
 onUnmounted(()=>{
   window.removeEventListener("scroll",throttle(checkScroll))
 })
-function getData(){
-  axios_instance.get(`/admin${AXIOS_URL.SEARCH_ANI}/bynamelike`,{
-    params:{
-      name: '',
-      page: aniCount,
-      pageSize: 12,
-    }
+function selectAnimes(){
+  isUpdate.value=true;
+  if (abortController.value) {
+    abortController.value.abort();
+  }
+  abortController.value = new AbortController();
+  axios_instance.post(`/user${AXIOS_URL.DIR_SELECT_ANI}`,condition.value,{
+    signal: abortController.value.signal
   })
-      .then(res => {
-        for(let item of res.data.data) {
-          let anttp = {
-            show: {
-              score: false,
-              date: false,
-              state: true,
-              name: true
-            },
-            data: {
-              id: item.id,
-              name: item.name,
-              image: item.image,
-              ep: item.ep,
-              end: item.end,
-              updateTime: item.updateTime,
-            }
-          }
-          aniList.push(anttp);
-        }
-        if(res.data.data.length<12){
-          isAll=1;
-        }
+      .then(res=>{
+        const newData = tranToCard(res.data.data);
+        aniList.push(...newData);
+        isAll = newData.length < condition.value.pageSize ? 1 : 0;
       })
       .catch(err=>{console.log(err)})
+  isUpdate.value=false;
+}
+function getHotTag(){
+  axios_instance.get(`/user${AXIOS_URL.HOT_TAG}`)
+      .then(res=>{
+        tags[0]=res.data.data.map(item=>{return item.name;});
+        tags[0].unshift("全部");
+      })
+      .catch(err=>{console.log(err)})
+}
+function tranToCard(data){
+  let anilist=[];
+  for(let item of data){
+    let anttp={
+      show:{
+        score: false,
+        state: true,
+        date: true,
+        name: true
+      },
+      data: {
+        id:item.id,
+        name:item.name,
+        image:item.image,
+        ep:item.ep,
+        end:item.end,
+        updateTime:item.updateTime,
+      }
+    }
+    let date=anttp.data.updateTime.split("-");
+    anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
+    anilist.push(anttp);
+  }
+  return anilist;
+}
+function changeCondition(type,condi){
+  type++;
+  const newCondition = { ...condition.value }; // 创建新对象
+  if (type === 1) {
+    newCondition.tag = condi;
+  } else if (type === 2) {
+    newCondition.year = condi;
+  } else {
+    newCondition.orderr = condi==="时间排序"?0:1;
+  }
+  condition.value = newCondition; // 替
 }
 function checkScroll(){
   const scrollTop=window.scrollY;
   const clientHeight=window.innerHeight;
   const scrollHeight =document.documentElement.scrollHeight;
   if(Math.ceil(scrollTop+clientHeight)>=scrollHeight&&isAll===0){
-    aniCount++;
-    getData();
+    condition.value.offset++;
   }
 }
 function throttle(fn,delay=200){
@@ -100,6 +135,18 @@ function throttle(fn,delay=200){
   }
 }
 
+
+watch(condition,(newCon,oldCon)=>{
+  if(newCon.year!==oldCon.year||newCon.tag!==oldCon.tag||newCon.orderr!==oldCon.orderr){
+    condition.value={
+      ...newCon,
+      offset: 0
+    }
+    aniList.length=0;
+    console.log("changeTag");
+  }
+  selectAnimes();
+},{deep:true});
 </script>
 
 <style scoped>

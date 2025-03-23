@@ -1,6 +1,7 @@
 <template>
   <div class="main">
-    <span class="iconfont icon-gonggao07"></span>这里是公告
+    <span class="iconfont icon-gonggao07"></span>网站开发中，计划详情见
+    <a href="https://github.com/Momoyouta/momoyouta.github.io">GitHub</a>
   </div>
 </template>
 

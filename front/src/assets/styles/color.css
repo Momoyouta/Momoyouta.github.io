@@ -18,9 +18,17 @@
     --btn-login-shdow: #e6ddcb;
     --btn-login-shdow-hover: #e1d7c5;
     --btn-login-hover: #dd6236;
+    --copyrigh: #898787;
+    --tag-bg: #d1ddb9;
 
     --input-base: #e1dbd8;
 
 
     --side-font-active:#FF7F50;
+
+    --admin-base-box-bg: #F7EEDD;
+    --admin-base-li-active: #f4d5a1;
+    --admin-base-btn: #f8946e;
+    --admin-base-btn-disable: #a98370;
+    --admin-rectangle-bg: #948b8b;
 }

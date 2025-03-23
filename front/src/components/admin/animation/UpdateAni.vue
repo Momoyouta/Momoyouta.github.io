@@ -33,6 +33,7 @@
       </div>
     </div>
   </div>
+  <button class="update-tag" @click="updateTagCount">更新tag计数</button>
   <div class="main-detail" v-if="detail">
     <div class="wapper">
       <div class="img-upload">
@@ -56,7 +57,7 @@
           </div>
           <div class="input-item">
             <span class="input-item-lab">播放地址：</span>
-            <input v-model="aniDTO.videoAddr" class="input-video-addr" type="text" style="width: 20rem" placeholder="请输入播放地址">
+            <input v-model="aniDTO.videoList" class="input-video-addr" type="text" style="width: 20rem" placeholder="请输入播放地址">
           </div>
           <div class="input-item-textarea2">
             <span class="input-item-lab">简介：</span>
@@ -70,11 +71,11 @@
         <div class="right">
           <div class="input-item">
             <span class="input-item-lab">评分：</span>
-            <input v-model="aniDTO.score" class="input-name" type="text" style="width: 1.6rem" placeholder="请输入番名">
+            <input v-model.number="aniDTO.score" class="input-name" type="text" style="width: 1.6rem" placeholder="请输入番名">
           </div>
           <div class="input-item">
             <span class="input-item-lab">观看次数：</span>
-            <input v-model="aniDTO.views" class="input-name" type="text" style="width: 6rem" placeholder="请输入番名">
+            <input v-model.number="aniDTO.views" class="input-name" type="text" style="width: 6rem" placeholder="请输入番名">
           </div>
           <div class="input-item">
             <span class="input-item-lab">是否完结：</span>
@@ -82,7 +83,7 @@
           </div>
           <div class="input-item">
             <span class="input-item-lab">集数：</span>
-            <input v-model="aniDTO.ep" class="input-name" type="text" style="width: 6rem" placeholder="">
+            <input v-model.number="aniDTO.ep" class="input-name" type="text" style="width: 6rem" placeholder="">
           </div>
           <div class="btn">
             <button class="submit" @click="submitt">提交</button>
@@ -110,7 +111,7 @@ const pageList=reactive([])
 const aniDTO=reactive({
   name: '',
   image: '',
-  videoAddr:'',
+  videoList:'',
   description:'',
   cvList:'',
   views:'',
@@ -134,6 +135,13 @@ let searchName;
 const axios_instance = axios.create({
   baseURL: `${AXIOS_URL.BASIC}`,
 })
+function updateTagCount(){
+  axios_instance.put('/admin/tag/updatecount',{})
+      .then(res=>{
+        console.log(res.data);
+      })
+      .catch(err=>{console.log(err)})
+}
 
 function search(name){
   if(name === undefined)

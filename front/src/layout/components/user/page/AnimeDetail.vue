@@ -1,8 +1,10 @@
 <template>
-  <div class="divide"></div>
-  <InfoCard class="info cp"></InfoCard>
-  <AdCard class="ad cp"></AdCard>
-  <VedioList class="vedio cp"></VedioList>
+  <div class="conta">
+    <div class="divide"></div>
+    <InfoCard v-if="anime && Object.keys(anime).length" :anime="anime" class="info cp"></InfoCard>
+    <AdCard class="ad cp"></AdCard>
+    <VedioList class="vedio cp"></VedioList>
+  </div>
 </template>
 
 <script setup>
@@ -10,6 +12,28 @@
 import InfoCard from "@/components/animedetail/InfoCard.vue";
 import AdCard from "@/components/common/AdCard.vue";
 import VedioList from "@/components/animedetail/VedioList.vue";
+import {onMounted, reactive, ref} from "vue";
+import {useRoute} from "vue-router";
+import axios from "axios";
+import {AXIOS_URL} from "@/common/axios_url.js";
+const route = useRoute();
+const anime=ref({});
+const props=defineProps({
+  animeid: { type: String, required: true },
+})
+const axs=axios.create({
+  baseURL:`${AXIOS_URL.BASIC}`,
+})
+onMounted(()=>{
+  init();
+})
+async function init(){
+  const res=await axs.get(`${AXIOS_URL.USER_GET_ANIME_DETAIL}/${props.animeid}`)
+      .then(res=>res.data.data)
+      .catch(err=>{console.log(err)});
+  console.log("anidetail res:"+JSON.stringify(res));
+  anime.value = res;
+}
 </script>
 
 <style scoped>

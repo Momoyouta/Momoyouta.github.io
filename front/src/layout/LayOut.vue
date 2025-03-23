@@ -10,6 +10,7 @@
     <div class="main">
       <router-view name="main"/>
     </div>
+    <FooterBar></FooterBar>
   </div>
 </template>
 
@@ -17,6 +18,7 @@
 
 import SideNavbar from "./components/SideNavbar.vue";
 import TopNavbar from './components/TopNavbar.vue';
+import FooterBar from "@/layout/components/FooterBar.vue";
 
 </script>
 
@@ -54,6 +56,7 @@ import TopNavbar from './components/TopNavbar.vue';
   margin-left: 10rem;
   padding: 0 2.5rem;
   flex: 1;
+  margin-bottom: 3.6rem;
 }
 
 .content {

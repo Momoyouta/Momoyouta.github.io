@@ -1,6 +1,6 @@
 <template>
   <div class="divide"></div>
-  <AnimeDetail></AnimeDetail>
+  <AnimeDetail animeid="2106085943"></AnimeDetail>
 </template>
 
 <script setup>

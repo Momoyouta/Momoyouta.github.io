@@ -4,7 +4,6 @@
         @click.stop="routeChange(item,index)">
       <a href="#" :class="{active:activeLi===index}" v-if="isOption(index)">
         <span :class="['iconfont',`icon-${item.icon}`]"></span>
-
         {{ item.name }}
       </a>
       <div class="hr" v-if="!isOption(index)">--------------</div>
@@ -26,7 +25,7 @@ const ulItem=reactive([
   {id:4,name:'追番计划',path:'/animefollow',icon:'jihua_plan'},
   {id:0,name:'---',path:'#'},
   {id:5,name:'今日更新',path:'/dayupdate',icon:'gengxin'},
-  {id:6,name:'TEST',path:'/test',icon:'gengxin'},
+  {id:6,name:'TEST',path:'/test',icon:'shebeixiangqing'},
 ])
 const activeLi=ref(0);
 onMounted(()=>{

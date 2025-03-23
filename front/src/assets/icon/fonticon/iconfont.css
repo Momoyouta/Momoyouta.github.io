@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1742113731797') format('truetype');
+  src: url('iconfont.ttf?t=1742461860653') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +13,10 @@
 
 .icon-cuowu:before {
   content: "\f00b3";
+}
+
+.icon-shoucang:before {
+  content: "\f0144";
 }
 
 .icon-geren:before {
@@ -59,8 +63,20 @@
   content: "\e602";
 }
 
+.icon-xingxing:before {
+  content: "\e639";
+}
+
 .icon-download:before {
   content: "\e667";
+}
+
+.icon-shebeixiangqing:before {
+  content: "\e68f";
+}
+
+.icon-gengxin:before {
+  content: "\e65f";
 }
 
 .icon-gonggao07:before {

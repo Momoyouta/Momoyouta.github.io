@@ -17,22 +17,30 @@
 
 <script setup>
 import AnimationCard from "@/components/common/AnimationCard.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref} from "vue";
 import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
 const aniList=reactive([]);
 const axios_instance=axios.create({
   baseURL: `${AXIOS_URL.BASIC}`,
 })
+let isAll=0;
+let aniCount=1;
 onMounted(()=>{
   getData();
+  aniCount=1;
+  window.addEventListener("scroll",throttle(checkScroll))
 });
+onUnmounted(()=>{
+  window.removeEventListener("scroll",throttle(checkScroll))
+})
 function getData(){
   axios_instance.get(`/admin${AXIOS_URL.SEARCH_ANI}/bynamelike`,{
     params:{
       name: '',
-      page: 1,
-      pageSize: 99999,
+      page: aniCount,
+      pageSize: 18,
+      useDscp:false
     }
   })
       .then(res => {
@@ -53,12 +61,33 @@ function getData(){
               updateTime: item.updateTime,
             }
           }
-          // let date = anttp.data.updateTime.split("-");
-          // anttp.data.updateTime = date[1] + '/' + date[2].split("T")[0];
           aniList.push(anttp);
+        }
+        if(res.data.data.length<18){
+          isAll=1;
         }
       })
       .catch(err=>{console.log(err)})
+}
+function checkScroll(){
+  const scrollTop=window.scrollY;
+  const clientHeight=window.innerHeight;
+  const scrollHeight =document.documentElement.scrollHeight;
+  if(Math.ceil(scrollTop+clientHeight)>=scrollHeight&&isAll===0){
+    aniCount++;
+    getData();
+  }
+}
+function throttle(fn,delay=200){
+  let timer = null;
+  return (...args)=>{
+    if(!timer){
+      timer=setTimeout(()=>{
+        fn.apply(this,args);
+        timer = null;
+      },delay)
+    }
+  }
 }
 
 

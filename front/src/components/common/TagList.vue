@@ -2,7 +2,7 @@
   <div class="taglist-box">
     <ul>
       <li v-for="(item,index) in items" :class="{active:activeItem == index && isChoose}"
-      @click="activeItem=index">{{item}}</li>
+      @click="submit(index,item)" >{{item}}</li>
     </ul>
   </div>
 </template>
@@ -20,6 +20,11 @@ const props=defineProps({
     default:false
   }
 })
+const emit=defineEmits(["propSelect"]);
+function submit(index,condi){
+  activeItem.value=index;
+  emit("propSelect",condi);
+}
 </script>
 
 <style scoped>

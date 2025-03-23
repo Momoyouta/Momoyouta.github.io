@@ -1,4 +1,5 @@
 <template>
+  <BangumiApi></BangumiApi>
   <div class="wapper">
     <div class="img-upload">
       <img :src="imgSrcPreview" alt="">
@@ -21,7 +22,7 @@
         </div>
         <div class="input-item">
           <span class="input-item-lab">播放地址：</span>
-          <input v-model="aniDTO.videoAddr" class="input-video-addr" type="text" style="width: 20rem" placeholder="请输入播放地址">
+          <input v-model="aniDTO.videoList" class="input-video-addr" type="text" style="width: 20rem" placeholder="请输入播放地址">
         </div>
         <div class="input-item-textarea2">
           <span class="input-item-lab">简介：</span>
@@ -35,11 +36,11 @@
       <div class="right">
         <div class="input-item">
           <span class="input-item-lab">评分：</span>
-          <input v-model="aniDTO.score" class="input-name" type="text" style="width: 1.6rem" placeholder="请输入番名">
+          <input v-model.number="aniDTO.score" class="input-name" type="text" style="width: 1.6rem" placeholder="请输入番名">
         </div>
         <div class="input-item">
           <span class="input-item-lab">观看次数：</span>
-          <input v-model="aniDTO.views" class="input-name" type="text" style="width: 6rem" placeholder="请输入番名">
+          <input v-model.number="aniDTO.views" class="input-name" type="text" style="width: 6rem" placeholder="请输入番名">
         </div>
         <div class="input-item">
           <span class="input-item-lab">是否完结：</span>
@@ -47,7 +48,7 @@
         </div>
         <div class="input-item">
           <span class="input-item-lab">集数：</span>
-          <input v-model="aniDTO.ep" class="input-name" type="text" style="width: 6rem" placeholder="">
+          <input v-model.number="aniDTO.ep" class="input-name" type="text" style="width: 6rem" placeholder="">
         </div>
         <div class="btn">
           <button class="submitt" @click="submitt">提交</button>
@@ -62,21 +63,25 @@
 import {computed, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
+import LayOut from "@/App.vue";
+import BangumiApi from "@/components/admin/animation/BangumiApi.vue";
 const imgDefaultSrc="/src/assets/img/ani_add_error.png";
 const imgSrcPreview = ref(imgDefaultSrc);
 let imgExist=false;
 const aniDTO=reactive({
   name: '',
   image: '',
-  videoAddr:'',
+  videoList:'',
   description:'',
   cvList:'',
-  ep: '',
-  end: '',
+  views:0,
+  score:0,
+  ep:0,
+  end: 0,
 });
 const checkbox=computed({
   get() {
-    return aniDTO.end == 1 ? true : false;
+    return aniDTO.end == 1 ? 1 : 0;
   },
   set(newValue){
     aniDTO.end=newValue?1:0
@@ -104,6 +109,7 @@ function submitt() {
     return
   }
   if(!imgExist){alert("图片不存在");return;}
+  console.log(aniDTO.ep)
   axios_instance.put(`${AXIOS_URL.ADD_ANI}`,aniDTO)
   .then(res => {
     if(res.data.code==1){alert("添加成功")}
@@ -228,5 +234,6 @@ textarea {
 .right{
   margin-left: 2rem;
 }
+
 
 </style>

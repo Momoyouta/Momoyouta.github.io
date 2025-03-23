@@ -1,38 +1,59 @@
 <template>
   <div class="main-weeklist">
-      <div class="head-count">
-        <ul class="count-ul">
-          <li v-for="(day, index) in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']">
-            <div class="title">
-              {{day}}
+      <div class="info-box">
+        <div class="info-box-left">
+          <div class="graph box">
+            <div class="histogram">
+              <ul class="rectangle">
+                <li v-for="num in aniCount">
+                  <div class="count">
+                    {{ num }}
+                  </div>
+                  <div class="rectangleli" :style="{height:num/mostDay*75+'%'}"></div>
+                </li>
+              </ul>
             </div>
-            <span>{{aniCount[index]}}部</span>
-          </li>
-        </ul>
-      </div>
-      <div class="top">
-        <div class="nav">
-          <ul class="nav-ul">
-            <li v-for="(day, index) in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']"
-                :key="index"
-                :class="{ active: activeDay === index}"
-                @click="changeList(index)">
-              <a href="#">{{ day }}</a>
+            <ul class="his-title">
+              <li v-for="item in ['周一','周二','周三','周四','周五','周六','周日']">{{item}}</li>
+            </ul>
+          </div>
+          <div class="nav box">
+            <ul class="nav-ul ">
+              <li v-for="(day, index) in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']"
+                  :key="index"
+                  :class="{ active: activeDay-1 === index}"
+                  @click="activeDay=index+1">
+                <a href="#">{{ day }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box-right">
+          <ul class="ul-info-right-box">
+            <li class="info box">
+              <h2>季共 {{ totAni }} 部</h2>
+            </li>
+            <li class="contro box">
+              <div class="btn-box">
+                <button class="edit" @click="isEditing^=true">{{ isEditing?'开启编辑':'关闭编辑' }}</button>
+                <button :disabled="isEditing" class="save" @click="updateAll">保存</button>
+              </div>
+              <div class="btn-box load">
+                <span>年：<input type="text" v-model="selectYear" :disabled="isEditing" placeholder="2024..."></span>
+                <span>月：<input type="text" v-model="selectMonth" :disabled="isEditing" placeholder="1..."></span>
+                <button :disabled="isEditing" class="load" @click="load(selectYear,selectMonth)">读取</button>
+              </div>
+              <div class="btn-box">
+                <button :disabled="isEditing" class="redo">撤回所有</button>
+                <button :disabled="isEditing" class="redo">撤回</button>
+              </div>
             </li>
           </ul>
         </div>
-        <span class="tot">周共 {{totAni}} 部</span>
-        <div class="btn-list">
-          <ul class="btn-ul">
-            <li><button @click="clean">清空</button></li>
-            <li><button @click="updateDay(activeDay)">提交</button></li>
-            <li><button @click="updateAll">提交所有</button></li>
-          </ul>
-        </div>
       </div>
-      <div class="content">
+      <div class="weeklist box">
         <ul class="ani-ul">
-          <li v-for="(ani,index) in aniList[activeDay]" :key="index">
+          <li v-if="isUpdate==false" v-for="(ani,index) in aniList[activeDay]" :key="index">
             <a class="icon" @click.stop="del(index)">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-chacha"></use>
@@ -50,64 +71,68 @@
 
 <script setup>
 import AnimationCard from "@/components/common/AnimationCard.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch, watchEffect} from "vue";
 import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
 import FloatSearchbox from "@/components/common/FloatSearchbox.vue";
-const aniList=reactive([[],[],[],[],[],[],[]]);
-const activeDay=ref(0);
+const aniList=reactive([[],[],[],[],[],[],[],[]]);
+const activeDay=ref(1);
 const totAni=ref(0);
-const aniCount=reactive([]);
+const aniCount=reactive([0,0,0,0,0,0,0]);
 const showModal=ref(false)
 const axios_is=axios.create({
   baseURL: `${AXIOS_URL.BASIC}`,
 })
+const selectYear=ref(2024);
+const selectMonth=ref(4);
+const isUpdate=ref(true);
+const isEditing=ref(true);
+const mostDay=ref(0);
 onMounted(()=>{
   getData();
 });
-function changeList(day){
-  activeDay.value=day
-}
-
 async function getData(){
-  for(let day=0;day<7;day++){
+  for(let day=1;day<=7;day++){
     await axios_is.get(`/user${AXIOS_URL.WEEKLIST_DAY_RQ}`,{
       params:{
-        day: day+1,
+        day: day,
       }
     })
         .then(res=>{
-          for(let item of res.data.data){
-            let anttp={
-              show:{
-                score: false,
-                state: true,
-                date: true,
-                name: true
-              },
-              data: {
-                id:item.id,
-                name:item.name,
-                image:item.image,
-                ep:item.ep,
-                end:item.end,
-                updateTime:item.updateTime,
-              }
-            }
-            let date=anttp.data.updateTime.split("-");
-            anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
-            aniList[day].push(anttp);
-
-          }
-
+          aniList[day] = tranToCard(res.data.data);
         })
         .catch(err=>{console.log(err)});
-    let anis=aniList[day].length;
-    totAni.value+=anis;
-    aniCount.push(anis);
+    // let anis=aniList[day].length;
+    // totAni.value+=anis;
+    // aniCount.push(anis);
   }
+  isUpdate.value=false;
 }
-
+function tranToCard(data){
+  let anilist=[];
+  for(let item of data){
+    let anttp={
+      show:{
+        score: false,
+        state: true,
+        date: true,
+        name: true
+      },
+      data: {
+        id:item.id,
+        name:item.name,
+        image:item.image,
+        ep:item.ep,
+        end:item.end,
+        updateTime:item.updateTime,
+      }
+    }
+    let date=anttp.data.updateTime.split("-");
+    anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
+    anilist.push(anttp);
+  }
+  return anilist;
+}
 
 function clean(){
   aniList[activeDay.value-1].length=0;
@@ -140,11 +165,10 @@ function setDaylist(aniCart){
   totAni.value+=aniCart.length;
 }
 function updateDay(day){
-  day++;
   let dayList=[];
-  for(let item of aniList[day-1]){
+  for(let item of aniList[day]){
     let wk={
-      aniId:item.data.id,
+      animeId:item.data.id,
       name:item.data.name,
       days: day,
       updateTime:'',
@@ -158,76 +182,174 @@ function updateDay(day){
       .catch(err=>{console.log(err)});
 }
 function updateAll(){
-  for(let i=0;i<7;i++){
+  for(let i=1;i<=7;i++){
     updateDay(i);
   }
 }
+function load(year,month){
+  isUpdate.value=true;
+  axios_is.get(AXIOS_URL.WEEKLIST_QUARTER_GET,{
+      params:{
+        quarter:year+'年'+month+'月',
+      }
+  })
+      .then(res=>{
+        for(let day=1;day<=7;day++){
+          const relaylist=tranToCard(res.data.data[day]);
+          aniList[day]=relaylist;
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+  isUpdate.value=false;
+}
+
+watch(aniList,(newValue,oldValue)=>{
+  totAni.value=0;
+  for(let day=1;day<=7;day++){
+    aniCount[day-1]=newValue[day].length;
+    totAni.value+=aniCount[day-1];
+  }
+  aniCount.forEach((x)=>{
+    mostDay.value=x>mostDay.value?x:mostDay.value;
+  })
+})
 
 </script>
 
 <style scoped>
 .main-weeklist{
   width: 100%;
-  padding: 1rem 1rem;
-  background-color: white;
-}
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-
 }
 ul{
   display: flex;
 }
-
-.head-count{
-  border-radius: 5px;
-  border: var(--nav-ul-bg) solid 1px;
+.box{
+  border-radius: 1rem;
   overflow: hidden;
-  margin-bottom: 1rem;
+  background-color: var(--admin-base-box-bg);
 }
-.count-ul{
-  display: grid;
-  grid-template-columns: repeat(7,1fr);
-}
-.count-ul li{
-  text-align: center;
-  padding: 3px 0;
-}
-.count-ul li:nth-child(1n){
-
-  background-color: var(--nav-ul-bg);
-}
-.count-ul li:nth-child(2n){
-  background: none;
-}
-.count-ul li span{
-  font-size: 75%;
-}
-
-.btn-ul li{
-  padding-right:1rem;
-}
-.btn-ul li button{
-  padding: 3px 6px;
+button{
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.6rem;
   font-size: 1rem;
+  border: none;
+  background-color: var(--admin-base-btn);
+  color: #fff;
+  margin-right: 1rem;
+  cursor: pointer;
 }
-.tot{
-  background-color: var(--nav-ul-bg);
-  padding: 4px 8px;
-  border-radius: 5px;
+input{
+  vertical-align: middle;
+  width: 3rem;
+  text-align: center;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: #5f5b5b 1px solid;
+  height: 1.5rem;
 }
 
-.nav-ul a{
-  text-decoration: none;
-  color: black;
+.info-box{
+  margin-bottom: 1rem;
+  display: flex;
 }
+
+.info-box-left{
+  width: 60%;
+  margin-right: 1rem;
+}
+.graph{
+  height: 10rem;
+  margin-bottom: 1rem;
+  padding: 1.5rem 3rem;
+}
+.histogram{
+  width: 100%;
+  height: 80%;
+  border-bottom: black solid 3px;
+  border-left: black solid 3px;
+}
+.rectangle{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+
+}
+.rectangle li{
+  width: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.count{
+  width: 100%;
+  text-align: center;
+  margin: 0;
+}
+.rectangleli{
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  background-color: var(--admin-rectangle-bg);
+}
+.his-title{
+  height: 20%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.info-box-right{
+  flex: 1;
+}
+.ul-info-right-box{
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+}
+.ul-info-right-box li{width: 100%;}
+.info{
+  height: 30%;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contro{
+  height: fit-content;
+  padding: 0.7rem 1rem;
+}
+.btn-box{
+  display: flex;
+  align-content: center;
+  text-align: center;
+  margin-bottom: 0.7rem;
+  margin-left: 30%;
+}
+.btn-box:nth-child(2){
+  margin-left: 17%;
+}
+.btn-box span{
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+button:disabled{
+  cursor: not-allowed;
+  background-color: var(--admin-base-btn-disable);
+  color: #dbd1d1;
+}
+
+
 .nav{
-  padding: 3px 3px;
-  border-radius: 6px;
-  background-color: var(--nav-ul-bg);
+  padding: 0.6rem 1rem;
+  border-radius: 0.9rem;
 }
 .nav-ul li{
   font-size: 1rem;
@@ -238,10 +360,14 @@ ul{
   border-radius: 6px;
 }
 .active{
-  background: white;
+  background: var(--admin-base-li-active);
 }
 .nav-ul li:last-child{
   margin-right: 0;
+}
+.nav-ul a{
+  text-decoration: none;
+  color: black;
 }
 
 .ani-ul{
@@ -253,6 +379,7 @@ ul{
   box-sizing: border-box;
   cursor: pointer;
   position: relative;
+  margin-bottom: 0.4rem;
 }
 .icon{
   position: absolute;
@@ -275,4 +402,8 @@ ul{
   aspect-ratio: 190.5/266.7;
 }
 
+.weeklist{
+  padding: 1rem 1rem;
+  background-color: var(--admin-base-box-bg);
+}
 </style>

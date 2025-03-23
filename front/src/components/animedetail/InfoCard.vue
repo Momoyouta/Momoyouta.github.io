@@ -1,43 +1,48 @@
 <template>
   <div class="box">
     <div class="left">
-      <img :src="img" alt="" referrerpolicy="no-referrer">
+      <img :src="anime.animation.image" alt="" referrerpolicy="no-referrer">
+      <a :href="anime.animeInfo.officialWeb">👉官方网站👈</a>
     </div>
     <div class="right">
       <div class="rtop-box">
         <div class="name-box">
-          <h2>一杆青空</h2>
-          <TagList class="taglist-box" :items="tags"></TagList>
+          <h2>{{ anime.animation.name }}</h2>
+          <div class="subtitle">
+            <span>{{anime.animeInfo.startDate}}开播</span>
+            <span>{{anime.animeInfo.company}}</span>
+          </div>
           <ul class="state ">
             <li>
               <div class="state-title">views</div>
-              <div class="state-data">1.2k次</div>
+              <div class="state-data">{{anime.animeRating.views}}次</div>
             </li>
             <li>
-              <div class="state-title">views</div>
-              <div class="state-data">1.2k次</div>
+              <div class="state-title">收藏数</div>
+              <div class="state-data">{{anime.animeRating.collect}}人</div>
             </li>
             <li>
-              <div class="state-title">views</div>
-              <div class="state-data">1.2k次</div>
+              <div class="state-title">状态</div>
+              <div class="state-data">{{anime.animation.ep}}集</div>
             </li>
           </ul>
         </div>
         <div class="score">
-          <div class="text">9.9</div>
-          <div class="star">
-            <p>⭐⭐⭐⭐⭐</p>
-            <p>xxx人评</p>
+          <div class="text">{{anime.animeRating.score}}</div>
+          <div class="star-box">
+            <span :class="['iconfont',item,'star']" v-for="item in starIcon"></span>
+            <p>{{anime.animeRating.scoreTotal}}人评</p>
           </div>
         </div>
       </div>
       <div class="rbottom-box">
         <div class="profile">
-          简介：“如果就这样毕业，我可不想只是个无名小卒啊！”青羽美波陷入了烦恼。她没有什么特别擅长的技能
-          ，也没有什么特别想做的事情。在花团锦簇的高中生活中，就这样做一个普通的配角角色，真的好吗？
-          美波离开了学校，开始寻找属于自己的“特别的特别”。偶然来到的，是附近的高尔夫练习场。在那里的打工女孩茜遥向她打招呼
-          ，美波拿起了高尔夫球杆——“实用型球杆”。这就是美波与高尔夫的邂逅。与天才型的高尔夫球手遥
-          ，以及立志成为网红的星美彩花一起，美波在寻找自己成为“主人公”的那一刻！作为超级新手的美波，今天又挥起了球杆。
+          <strong>简介：</strong>{{anime.animation.description}}
+        </div>
+        <div class="tags">
+          <ul class="tag-list">
+            <li v-for="(tag,index) in anime.tags">{{tag}}</li>
+          </ul>
         </div>
         <div class="btn-box">
           <button class="btn">
@@ -55,18 +60,44 @@
 </template>
 
 <script setup>
+import {onMounted, reactive,} from 'vue';
+const props = defineProps({
+  anime:{
+    type: Object,
+    required: true
+  }
+})
+onMounted(()=>{
+  starInit();
+})
+const starIcon=reactive([]);
+function starInit(){
+  let num=props.anime.animeRating.score*1.0/10*5;
+  if(num%1===0){
+    for(let i=0;i<num;i++){
+      starIcon.push('icon-star-full');
+    }
+    for(let i=0;i<5-num;i++){
+      starIcon.push('icon-star');
+    }
+  }else{
+    num=Math.floor(num);
+    for(let i=0;i<num;i++){
+      starIcon.push('icon-star-full');
+    }
+    starIcon.push('icon-star-half');
+    for(let i=0;i<5-num-1;i++){
+      starIcon.push('icon-star');
+    }
+  }
 
-import {ref} from 'vue';
-import TagList from "@/components/common/TagList.vue";
-import imgg from '/assets/img/ani_test2.webp'
-const img=ref(imgg)
-const tags=["日常", "搞笑","运动"]
+}
 </script>
 
 <style scoped>
 .box{
   display: flex;
-  height: 22rem;
+  height: 24rem;
   border-radius: 1rem;
   overflow: hidden;
 }
@@ -74,12 +105,21 @@ const tags=["日常", "搞笑","运动"]
   width: 20%;
   aspect-ratio: 190/320;
   background-color: var(--side-bg);
+  text-align: center;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 .left img{
   width: 100%;
-  aspect-ratio: 190/280;
   border-radius: 1rem;
+  margin-bottom: 0.5rem;
+  border: #f6eedd solid 1px;
 }
+.left a{
+  text-decoration: none;
+  color: #e16d6d;
+}
+
 .right{
   flex:1;
 }
@@ -89,11 +129,14 @@ const tags=["日常", "搞笑","运动"]
   height: 40%;
   align-items: end;
 }
-.name-box{
-
+.subtitle{
+  margin-left: 1.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  color: #464649;
 }
-.taglist-box{
-  margin-left: 1rem;
+.subtitle span{
+  margin-right: 0.5rem;
 }
 h2{
   margin-left: 1.5rem;
@@ -109,10 +152,14 @@ h2{
   padding: 0.1rem 0.5rem;
   border-right: var(--btn-login) solid 0.25rem;
 }
-
 .state li:last-child{
   border-right: none;
 }
+.state-data{
+  text-align: center;
+  font-size: 0.75rem;
+}
+
 .rbottom-box{
   height: 60%;
   position: relative;
@@ -153,7 +200,30 @@ h2{
   text-align: center;
   font-size: 2rem;
 }
-.star{
+.star-box{
   text-align: center;
+  margin-left: 0.2rem;
+}
+.star{
+  position: relative;
+  color: #f4c859;
+}
+
+.tags{
+  width: 75%;
+}
+.tag-list{
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag-list li{
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  margin-right: 0.2rem;
+  margin-bottom: 0.2rem;
+  border-radius: 0.8rem;
+  background-color: var(--tag-bg);
+  box-shadow: 0 0 1px #5f5b5b;
+  cursor: pointer;
 }
 </style>

@@ -31,7 +31,7 @@
       </div>
       <div class="list">
         <ul class="ani-uul">
-          <li @click.stop.prevent="handlerCart(ani.data,index)" v-for="(ani,index) in aniList" :key="index">
+          <li @click.capture.stop.prevent="handlerCart(ani.data,index)" v-for="(ani,index) in aniList" :key="index">
             <div :class="{'border-helper':aniChoose[index]}">
               <AnimationCard  style="width: 100%;font-size: 12px" :ani="ani.data" :show-con="ani.show"></AnimationCard>
             </div>
@@ -107,6 +107,7 @@ function search(name){
       name: name,
       page: 1,
       pageSize: 999999,
+      useDscp: false,
     }
   })
       .then(res => {
