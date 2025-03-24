@@ -50,22 +50,8 @@ import {onMounted, reactive, ref} from "vue";
 import AnimationCard from "@/components/common/AnimationCard.vue";
 import {AXIOS_URL} from "@/common/axios_url.js";
 import axios from "axios";
+import {tranToCard} from "@/hooks/animeCard.js";
 const emit=defineEmits(['floatClose','getAniCart']);
-let anttp={
-  show:{
-    score: false,
-    date: false,
-    state: false,
-    name: true
-  },
-  data: {
-    id:1,
-    name:'item.name',
-    image:'',
-    ep:'',
-    end:'',
-    updateTime:'',
-  }}
 const aniList=reactive([]);
 const aniCart=reactive([])
 const cartVisiable=ref(false);
@@ -111,28 +97,9 @@ function search(name){
     }
   })
       .then(res => {
-        for(let item of res.data.data){
-          let anttp={
-            show:{
-              score: false,
-              date: false,
-              state: false,
-              name: true
-            },
-            data: {
-              id:item.id,
-              name:item.name,
-              image:item.image,
-              ep:item.ep,
-              end:item.end,
-              updateTime:item.updateTime,
-            }
-          }
-          let date=anttp.data.updateTime.split("-");
-          anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
-          aniList.push(anttp);
+          const newData=tranToCard(res.data.data);
+          aniList.push(...newData);
           aniChoose.push(0);
-        }
       })
       .catch(err=>{console.log(err)})
 }

@@ -75,6 +75,8 @@ import {onMounted, reactive, ref, watch, watchEffect} from "vue";
 import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
 import FloatSearchbox from "@/components/common/FloatSearchbox.vue";
+import {tranToCard} from "@/hooks/animeCard.js";
+
 const aniList=reactive([[],[],[],[],[],[],[],[]]);
 const activeDay=ref(1);
 const totAni=ref(0);
@@ -108,32 +110,6 @@ async function getData(){
   }
   isUpdate.value=false;
 }
-function tranToCard(data){
-  let anilist=[];
-  for(let item of data){
-    let anttp={
-      show:{
-        score: false,
-        state: true,
-        date: true,
-        name: true
-      },
-      data: {
-        id:item.id,
-        name:item.name,
-        image:item.image,
-        ep:item.ep,
-        end:item.end,
-        updateTime:item.updateTime,
-      }
-    }
-    let date=anttp.data.updateTime.split("-");
-    anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
-    anilist.push(anttp);
-  }
-  return anilist;
-}
-
 function clean(){
   aniList[activeDay.value-1].length=0;
 }

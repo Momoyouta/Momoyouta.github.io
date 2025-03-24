@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
-import com.momoyouta.web_ani_pojo.entity.Animation;
-import com.momoyouta.web_ani_pojo.entity.AnimeAtags;
-import com.momoyouta.web_ani_pojo.entity.AnimeInfo;
-import com.momoyouta.web_ani_pojo.entity.AnimeRating;
+import com.momoyouta.web_ani_pojo.entity.*;
 import com.momoyouta.web_ani_server.mapper.AniMapper;
 import com.momoyouta.web_ani_server.mapper.AnimeAndTagsMapper;
 import com.momoyouta.web_ani_server.mapper.AnimeInfoMapper;
@@ -22,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -92,7 +93,7 @@ public class AniServiceImpl implements AniService {
     }
 
     @Override
-    public Animation getByName(String name){
+    public List<Animation> getByName(String name){
         return aniMapper.getByName(name);
     }
 
@@ -153,6 +154,36 @@ public class AniServiceImpl implements AniService {
             animation.setDescription(null);
         }
         return list;
+    }
+
+    @Override
+    public List<AnimeKeywordSearchVO> searchAnimeByKeyword(String keyword,int offset,int pageSize) {
+        List<Animation> animes= aniMapper.getByNamelike(keyword,offset,pageSize);
+        List<AnimeKeywordSearchVO> voList=new ArrayList<>();
+        for(Animation anime:animes){
+            Long animeId=anime.getId();
+            AnimeKeywordSearchVO vo=AnimeKeywordSearchVO.builder()
+                    .name(anime.getName())
+                    .animeId(animeId)
+                    .ep(anime.getEp())
+                    .image(anime.getImage())
+                    .description(anime.getDescription()).build();
+            if(vo.getCompany()==null) vo.setCompany("未知");
+            AnimeInfo info= infoMapper.getAnimeId(animeId);
+            vo.setDate(info.getStartDate());
+            vo.setCompany(info.getCompany());
+            List<String> excludedWords = Arrays.asList("TV", "日本", "漫画改", "漫改", "TVA", "动画", "续作", "日漫", "未确定");
+            List<String> tags=tagService.getAnimeTags(animeId).stream().filter((tag)->
+                    !excludedWords.contains(tag)
+            ).collect(Collectors.toList());
+            List<String> newtags=new ArrayList<>();
+            for(int i=0; i<Math.min(6,tags.size());i++){
+                newtags.add(tags.get(i));
+            }
+            vo.setTags(newtags);
+            voList.add(vo);
+        }
+        return voList;
     }
 
 

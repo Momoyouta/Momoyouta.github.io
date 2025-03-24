@@ -29,6 +29,8 @@ import axios from "axios";
 import {AXIOS_URL} from "@/common/axios_url.js";
 const titles=['类型','年份','排序']
 const tags=reactive([[],['全部',2024,2025],['时间排序','评分排序']])
+import {tranToCard} from '@/hooks/animeCard.js'
+import {throttle,checkScroll} from '@/hooks/commonHook.js'
 let isAll=0
 const abortController = ref(null);
 const condition=ref({
@@ -48,13 +50,17 @@ const axios_instance=axios.create({
 onMounted(()=>{
   getHotTag();
   selectAnimes();
-  window.addEventListener("scroll",throttle(checkScroll))
+  window.addEventListener("scroll",throttle(()=>checkScroll(handlerScroll)))
 });
 onUnmounted(()=>{
-  window.removeEventListener("scroll",throttle(checkScroll))
+  window.removeEventListener("scroll",throttle(()=>checkScroll(handlerScroll)))
 })
+function handlerScroll(value){
+  condition.value.offset+=value;
+}
 function selectAnimes(){
   isUpdate.value=true;
+  if(isAll===1) return;
   if (abortController.value) {
     abortController.value.abort();
   }
@@ -78,31 +84,6 @@ function getHotTag(){
       })
       .catch(err=>{console.log(err)})
 }
-function tranToCard(data){
-  let anilist=[];
-  for(let item of data){
-    let anttp={
-      show:{
-        score: false,
-        state: true,
-        date: true,
-        name: true
-      },
-      data: {
-        id:item.id,
-        name:item.name,
-        image:item.image,
-        ep:item.ep,
-        end:item.end,
-        updateTime:item.updateTime,
-      }
-    }
-    let date=anttp.data.updateTime.split("-");
-    anttp.data.updateTime=date[1]+'/'+date[2].split("T")[0]
-    anilist.push(anttp);
-  }
-  return anilist;
-}
 function changeCondition(type,condi){
   type++;
   const newCondition = { ...condition.value }; // 创建新对象
@@ -115,26 +96,6 @@ function changeCondition(type,condi){
   }
   condition.value = newCondition; // 替
 }
-function checkScroll(){
-  const scrollTop=window.scrollY;
-  const clientHeight=window.innerHeight;
-  const scrollHeight =document.documentElement.scrollHeight;
-  if(Math.ceil(scrollTop+clientHeight)>=scrollHeight&&isAll===0){
-    condition.value.offset++;
-  }
-}
-function throttle(fn,delay=200){
-  let timer = null;
-  return (...args)=>{
-    if(!timer){
-      timer=setTimeout(()=>{
-        fn.apply(this,args);
-        timer = null;
-      },delay)
-    }
-  }
-}
-
 
 watch(condition,(newCon,oldCon)=>{
   if(newCon.year!==oldCon.year||newCon.tag!==oldCon.tag||newCon.orderr!==oldCon.orderr){
@@ -143,6 +104,7 @@ watch(condition,(newCon,oldCon)=>{
       offset: 0
     }
     aniList.length=0;
+    isAll=0;
     console.log("changeTag");
   }
   selectAnimes();

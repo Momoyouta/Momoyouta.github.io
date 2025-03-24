@@ -1,8 +1,8 @@
 export const AXIOS_URL ={
-    BASIC:'https://momoyouta.asia:443',
-    //BASIC:'http://localhost:8080',
+    BASIC:import.meta.env.VITE_URL,
     ADD_ANI:'/admin/ani/add',
     SEARCH_ANI:'/ani/search',
+    KEYWORD_SEARCH:'/ani/search/keyword',
     SEARCH_PAGE_ANI:'/ani/search/page',
     UPDATE_ANI:'/admin/ani/update',
     LOCK_ANI:'/admin/ani/update/lock',

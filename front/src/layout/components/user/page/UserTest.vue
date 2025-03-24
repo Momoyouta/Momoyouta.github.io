@@ -1,11 +1,12 @@
 <template>
   <div class="divide"></div>
-  <AnimeDetail animeid="2106085943"></AnimeDetail>
+  <AnimeSearchPage keyword="魔王"></AnimeSearchPage>
 </template>
 
 <script setup>
 
-import AnimeDetail from "@/layout/components/user/page/AnimeDetail.vue";
+import AnimeDetail from "@/layout/components/user/page/AnimeDetailPage.vue";
+import AnimeSearchPage from "@/layout/components/user/page/AnimeSearchPage.vue";
 </script>
 
 <style scoped>

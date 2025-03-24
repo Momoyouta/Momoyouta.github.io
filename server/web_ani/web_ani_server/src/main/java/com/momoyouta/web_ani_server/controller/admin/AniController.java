@@ -49,15 +49,15 @@ public class AniController {
         return Result.success(animationList);
     }
 
-    @GetMapping("/search/byname")
-    public Result<Animation> getByName(@RequestParam String name,@RequestParam boolean useDscp){
-        Animation animation=new Animation();
-        animation=aniService.getByName(name);
-        if(!useDscp){
-            animation.setDescription("");
-        }
-        return Result.success(animation);
-    }
+//    @GetMapping("/search/byname")
+//    public Result<Animation> getByName(@RequestParam String name,@RequestParam boolean useDscp){
+//        Animation animation=new Animation();
+//        animation=aniService.getByName(name);
+//        if(!useDscp){
+//            animation.setDescription("");
+//        }
+//        return Result.success(animation);
+//    }
 
     @GetMapping("/search/page")
     public Result<Integer> getByNamelikeTotPage(@RequestParam String name){

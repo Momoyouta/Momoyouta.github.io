@@ -18,7 +18,8 @@ import AnimefollowPage from "@/layout/components/user/page/AnimefollowPage.vue";
 import DirectoryPage from "@/layout/components/user/page/DirectoryPage.vue";
 import DayupdatePage from "@/layout/components/user/page/DayupdatePage.vue";
 import UserTest from "@/layout/components/user/page/UserTest.vue";
-import AnimeDetail from "@/layout/components/user/page/AnimeDetail.vue";
+import AnimeDetail from "@/layout/components/user/page/AnimeDetailPage.vue";
+import AnimeSearchPage from "@/layout/components/user/page/AnimeSearchPage.vue";
 
 const routes =[
     {path:'/admin/:pathMatch(.*)*', components:{SideNavbar:adminSideBar,TopNavbar:adminTopBar}},
@@ -33,6 +34,13 @@ const routes =[
     {path:`/user/directory`,alias:'/directory',components:{SideNavbar:userSideBar,main:DirectoryPage,TopNavbar:userTopBar}},
     {path:`/user/dayupdate`,alias:'/dayupdate',components:{SideNavbar:userSideBar,main:DayupdatePage,TopNavbar:userTopBar}},
     {name:'getAnimeDetail' ,path:`/user/ani/:animeid`,alias:'/ani/:animeid',components:{SideNavbar:userSideBar,main:AnimeDetail,TopNavbar:userTopBar}
+        ,props: {
+            SideNavbar: false,
+            main: true,
+            TopNavbar: false,
+        }
+    },
+    {name:'searchAnime' ,path:`/user/search/:keyword`,alias:'/search/:keyword',components:{SideNavbar:userSideBar,main:AnimeSearchPage,TopNavbar:userTopBar}
         ,props: {
             SideNavbar: false,
             main: true,

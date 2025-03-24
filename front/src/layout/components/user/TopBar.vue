@@ -1,7 +1,7 @@
 <template>
   <div class="wapper">
     <div class="main">
-      <SearchBox style="width: 31rem" class="searchbox" />
+      <SearchBox @getSearch="search($event)" style="width: 31rem" class="searchbox" />
     </div>
     <div class="head-box">
       <div class="history">
@@ -21,12 +21,19 @@
 <script setup>
 import SearchBox from "@/components/common/SearchBox.vue";
 import {reactive, ref} from "vue";
-
+import {useRouter} from "vue-router";
+const routre=useRouter();
 const isLogin=ref(0);
 const user=reactive({
   id: 1,
   image: 'src/assets/img/user_image_test.png',
 })
+function search(keyword){
+  routre.push({
+    name:'searchAnime',
+    params:{keyword},
+  })
+}
 </script>
 
 <style scoped>

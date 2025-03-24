@@ -9,6 +9,8 @@
     --table-border: #b4b0b0;
     --nav-ul-bg: #e4e0e0;
 
+    --anime-cover-ratio: 190/280;
+    --box-shadow-cl: #a6a2a2;
     --base-bg: #ede4d3;
     --side-bg: #F7EEDD;
     --base-font: #2c2c2c;
@@ -22,6 +24,7 @@
     --tag-bg: #d1ddb9;
 
     --input-base: #e1dbd8;
+    --dash-base: #e1dbd8;
 
 
     --side-font-active:#FF7F50;

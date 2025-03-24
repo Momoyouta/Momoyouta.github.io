@@ -2,6 +2,7 @@ package com.momoyouta.web_ani_server.service;
 
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
 import com.momoyouta.web_ani_pojo.entity.Animation;
@@ -23,7 +24,7 @@ public interface AniService {
 
     List<Animation> getByNamelike(String name,int page,int pageSize);
 
-    Animation getByName(String name);
+    List<Animation> getByName(String name);
 
     Integer getByNamelikeTotPage(String name);
     public Result addNoDTO(Animation animation) ;
@@ -40,4 +41,6 @@ public interface AniService {
     public AnimeRating getRatingByAnimeId(Long animeId);
 
     public List<Animation> getByDirCondition(DirCondition dirCondition);
+
+    List<AnimeKeywordSearchVO> searchAnimeByKeyword(String keyword,int offset,int pageSize);
 }

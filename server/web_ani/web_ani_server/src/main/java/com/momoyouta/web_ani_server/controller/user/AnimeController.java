@@ -2,6 +2,7 @@ package com.momoyouta.web_ani_server.controller.user;
 
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
 import com.momoyouta.web_ani_pojo.entity.Animation;
@@ -39,15 +40,15 @@ public class AnimeController {
         return Result.success(animationList);
     }
 
-    @GetMapping("/search/byname")
-    public Result<Animation> getByName(@RequestParam String name,@RequestParam boolean useDscp){
-        Animation animation=new Animation();
-        animation=aniService.getByName(name);
-        if(!useDscp){
-            animation.setDescription("");
-        }
-        return Result.success(animation);
-    }
+//    @GetMapping("/search/byname")
+//    public Result<Animation> getByName(@RequestParam String name,@RequestParam boolean useDscp){
+//        Animation animation=new Animation();
+//        animation=aniService.getByName(name);
+//        if(!useDscp){
+//            animation.setDescription("");
+//        }
+//        return Result.success(animation);
+//    }
 
     @GetMapping("/search/page")
     public Result<Integer> getByNamelikeTotPage(@RequestParam String name){
@@ -69,6 +70,13 @@ public class AnimeController {
         log.info("dirCondition:"+dirCondition.toString());
         List<Animation> list=aniService.getByDirCondition(dirCondition);
         log.info(list.toString());
+        return Result.success(list);
+    }
+
+    @GetMapping("/search/keyword")
+    public Result<List<AnimeKeywordSearchVO>> searchAnimeByKeyword(@RequestParam String keyword,@RequestParam int offset,@RequestParam int pageSize){
+        List<AnimeKeywordSearchVO> list=aniService.searchAnimeByKeyword(keyword,offset,pageSize);
+        log.info("keywordAnimes:"+list.toString());
         return Result.success(list);
     }
 }

@@ -16,7 +16,6 @@
 <script setup>
 import {computed, ref} from "vue";
 import errImgUrl from "/src/assets/img/ani_add_error.png";
-import {AXIOS_URL} from "@/common/axios_url.js";
 import {router} from "@/route/config.js";
 const props=defineProps({
   showCon: {
