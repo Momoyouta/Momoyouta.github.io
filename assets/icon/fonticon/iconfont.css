@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1742479508419') format('truetype');
+  src: url('iconfont.ttf?t=1742983890786') format('truetype');
 }
 
 .iconfont {
@@ -27,12 +27,20 @@
   content: "\e646";
 }
 
+.icon-xuanxiang:before {
+  content: "\e63c";
+}
+
 .icon-chacha:before {
   content: "\e62f";
 }
 
 .icon-mulu:before {
   content: "\e608";
+}
+
+.icon-xuanxiang1:before {
+  content: "\e63b";
 }
 
 .icon-duigou:before {
