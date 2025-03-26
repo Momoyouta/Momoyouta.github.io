@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeCard2VO;
 import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
@@ -172,6 +173,36 @@ public class AniServiceImpl implements AniService {
             AnimeInfo info= infoMapper.getAnimeId(animeId);
             vo.setDate(info.getStartDate());
             vo.setCompany(info.getCompany());
+            List<String> excludedWords = Arrays.asList("TV", "日本", "漫画改", "漫改", "TVA", "动画", "续作", "日漫", "未确定");
+            List<String> tags=tagService.getAnimeTags(animeId).stream().filter((tag)->
+                    !excludedWords.contains(tag)
+            ).collect(Collectors.toList());
+            List<String> newtags=new ArrayList<>();
+            for(int i=0; i<Math.min(6,tags.size());i++){
+                newtags.add(tags.get(i));
+            }
+            vo.setTags(newtags);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    @Override
+    public List<AnimeCard2VO> getRecentlyUpdate() {
+        LambdaQueryWrapper<Animation> qw= new LambdaQueryWrapper<>();
+        qw.orderByDesc(Animation::getUpdateTime).last("limit 0,30");
+        List<Animation> animes= aniMapper.selectList(qw);
+        List<AnimeCard2VO> voList=new ArrayList<>();
+        for(Animation anime:animes){
+            Long animeId=anime.getId();
+            AnimeCard2VO vo=AnimeCard2VO.builder()
+                    .name(anime.getName())
+                    .animeId(animeId)
+                    .ep(anime.getEp())
+                    .image(anime.getImage())
+                    .description(anime.getDescription()).build();
+            AnimeInfo info= infoMapper.getAnimeId(animeId);
+            vo.setDate(info.getStartDate().substring(0,4));
             List<String> excludedWords = Arrays.asList("TV", "日本", "漫画改", "漫改", "TVA", "动画", "续作", "日漫", "未确定");
             List<String> tags=tagService.getAnimeTags(animeId).stream().filter((tag)->
                     !excludedWords.contains(tag)

@@ -15,7 +15,6 @@ export function checkScroll(callback){
     const clientHeight=window.innerHeight;
     const scrollHeight =document.documentElement.scrollHeight;
     if(Math.ceil(scrollTop+clientHeight)>=scrollHeight){
-        //condition.value.offset++;
         callback(1);
     }
 }

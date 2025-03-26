@@ -80,10 +80,10 @@ img{
   bottom: 10%;
   color: white;
   font-size: 70%;
-  text-shadow: 1px 1px 1px #404040;
+  text-shadow: 0 0 3px #404040;
 }
 .content{
-  padding: 5% 0;
+  padding: 1% 0;
   text-align: center;
   font-size: 85%;
   color: black;

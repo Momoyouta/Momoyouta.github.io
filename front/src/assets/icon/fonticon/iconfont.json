@@ -34,6 +34,13 @@
       "unicode_decimal": 58950
     },
     {
+      "icon_id": "2379110",
+      "name": "选项",
+      "font_class": "xuanxiang",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
       "icon_id": "2583881",
       "name": "叉叉",
       "font_class": "chacha",
@@ -46,6 +53,13 @@
       "font_class": "mulu",
       "unicode": "e608",
       "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "4258790",
+      "name": "选项",
+      "font_class": "xuanxiang1",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
     },
     {
       "icon_id": "4611765",
@@ -97,13 +111,6 @@
       "unicode_decimal": 58882
     },
     {
-      "icon_id": "10715456",
-      "name": "星星",
-      "font_class": "xingxing",
-      "unicode": "e639",
-      "unicode_decimal": 58937
-    },
-    {
       "icon_id": "11734521",
       "name": "download,下载,保存,存储",
       "font_class": "download",
@@ -116,6 +123,27 @@
       "font_class": "shebeixiangqing",
       "unicode": "e68f",
       "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "18170317",
+      "name": "星,星星,星形,半星,实星",
+      "font_class": "star-full",
+      "unicode": "e9a1",
+      "unicode_decimal": 59809
+    },
+    {
+      "icon_id": "18170318",
+      "name": "星,星星,星形,半星,实星",
+      "font_class": "star",
+      "unicode": "e9a2",
+      "unicode_decimal": 59810
+    },
+    {
+      "icon_id": "18170319",
+      "name": "星,星星,星形,半星",
+      "font_class": "star-half",
+      "unicode": "e9a3",
+      "unicode_decimal": 59811
     },
     {
       "icon_id": "25964422",

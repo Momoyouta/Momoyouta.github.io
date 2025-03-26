@@ -32,8 +32,34 @@ html{
     font-size: 120%;
 }
 
+/* 手机设备 */
+@media (max-width: 600px) {
+    html{
+        font-size: 10%;
+    }
+}
+
+
 @media screen and (max-width: 1180px) {
     html{
         font-size: 80%;
     }
 }
+
+
+/* 正常 *2550*1600 */
+@media (min-width: 1180px) and (max-width: 1600px) {
+    html{
+        font-size: 120%;
+    }
+}
+
+/* 大屏 */
+@media (min-width: 2000px) {
+    html{
+        font-size: 1.5vw;
+    }
+}
+
+
+

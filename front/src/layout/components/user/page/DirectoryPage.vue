@@ -14,7 +14,7 @@
   <div class="aniList">
     <ul class="animes">
       <li class="anime" v-for="(ani,index) in aniList">
-        <AnimationCard style="width: 100%;font-size: 16px" :ani="ani.data" :show-con="ani.show"></AnimationCard>
+        <AnimationCard style="width: 100%;font-size: 1rem" :ani="ani.data" :show-con="ani.show"></AnimationCard>
       </li>
     </ul>
   </div>
@@ -114,7 +114,7 @@ watch(condition,(newCon,oldCon)=>{
 <style scoped>
 .divide{
   width: 100%;
-  border-bottom: var(--input-base) solid 3px;
+  border-bottom: var(--input-base) solid 0.3rem;
   margin-bottom: 0.5rem;
   cursor: default;
 }
@@ -122,7 +122,7 @@ watch(condition,(newCon,oldCon)=>{
   font-size: 2.5rem;
   font-weight: bold;
   padding-top: 0.5rem;
-  border-bottom: var(--banner-active) solid 3px;
+  border-bottom: var(--banner-active) solid 0.3rem;
 
 }
 .tag-choose {

@@ -24,7 +24,7 @@ const ulItem=reactive([
   {id:3,name:'安利广场',path:'/recmground',icon:'tuijian'},
   {id:4,name:'追番计划',path:'/animefollow',icon:'jihua_plan'},
   {id:0,name:'---',path:'#'},
-  {id:5,name:'今日更新',path:'/dayupdate',icon:'gengxin'},
+  {id:5,name:'最近更新',path:'/recentupdate',icon:'gengxin'},
   {id:6,name:'TEST',path:'/test',icon:'shebeixiangqing'},
 ])
 const activeLi=ref(0);

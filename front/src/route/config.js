@@ -13,13 +13,13 @@ import WeeklistTest from "@/components/test/WeeklistTest.vue";
 import WeeklistMG from "@/components/admin/WeeklistMG.vue";
 import {AXIOS_URL} from "@/common/axios_url.js";
 import HomePage from "@/layout/components/user/page/HomePage.vue";
-import RecgroundPage from "@/layout/components/user/page/RecgroundPage.vue";
 import AnimefollowPage from "@/layout/components/user/page/AnimefollowPage.vue";
 import DirectoryPage from "@/layout/components/user/page/DirectoryPage.vue";
-import DayupdatePage from "@/layout/components/user/page/DayupdatePage.vue";
+import RecentUpdatePage from "@/layout/components/user/page/RecentUpdatePage.vue";
 import UserTest from "@/layout/components/user/page/UserTest.vue";
 import AnimeDetail from "@/layout/components/user/page/AnimeDetailPage.vue";
 import AnimeSearchPage from "@/layout/components/user/page/AnimeSearchPage.vue";
+import RecgroundPage from "@/layout/components/user/page/RecgroundPage.vue";
 
 const routes =[
     {path:'/admin/:pathMatch(.*)*', components:{SideNavbar:adminSideBar,TopNavbar:adminTopBar}},
@@ -32,7 +32,7 @@ const routes =[
     {path:`/user/recmground`,alias:'/recmground',components:{SideNavbar:userSideBar,main:RecgroundPage,TopNavbar:userTopBar}},
     {path:`/user/animefollow`,alias:'/animefollow',components:{SideNavbar:userSideBar,main:AnimefollowPage,TopNavbar:userTopBar}},
     {path:`/user/directory`,alias:'/directory',components:{SideNavbar:userSideBar,main:DirectoryPage,TopNavbar:userTopBar}},
-    {path:`/user/dayupdate`,alias:'/dayupdate',components:{SideNavbar:userSideBar,main:DayupdatePage,TopNavbar:userTopBar}},
+    {path:`/user/recentupdate`,alias:'/recentupdate',components:{SideNavbar:userSideBar,main:RecentUpdatePage,TopNavbar:userTopBar}},
     {name:'getAnimeDetail' ,path:`/user/ani/:animeid`,alias:'/ani/:animeid',components:{SideNavbar:userSideBar,main:AnimeDetail,TopNavbar:userTopBar}
         ,props: {
             SideNavbar: false,

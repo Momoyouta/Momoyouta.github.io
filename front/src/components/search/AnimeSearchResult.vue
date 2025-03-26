@@ -98,12 +98,21 @@ watch(() => props.keyword, (newVal, oldVal) => {
   background-color: var(--side-bg);
   border-radius: 1rem;
   margin-bottom: 1rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 .result .anime-item:hover{
   transform: scale(1.02);
 }
-
+.result .anime-item::after{
+  position: absolute;
+  right: -1rem;
+  z-index: 2;
+  content: "";
+  width: 0.5rem;
+  height: 100%;
+  background-color: var(--banner-active);
+  border-radius: 1rem;
+}
 .title{
   border-bottom: 2px solid var(--dash-base);
   margin: 1.5rem 0;
@@ -221,6 +230,9 @@ img{
   font-weight: bold;
   margin-left: 1rem;
   margin-bottom: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .date{
   margin-left: 1rem;

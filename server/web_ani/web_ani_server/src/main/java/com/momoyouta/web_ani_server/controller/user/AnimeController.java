@@ -2,6 +2,7 @@ package com.momoyouta.web_ani_server.controller.user;
 
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeCard2VO;
 import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
@@ -77,6 +78,12 @@ public class AnimeController {
     public Result<List<AnimeKeywordSearchVO>> searchAnimeByKeyword(@RequestParam String keyword,@RequestParam int offset,@RequestParam int pageSize){
         List<AnimeKeywordSearchVO> list=aniService.searchAnimeByKeyword(keyword,offset,pageSize);
         log.info("keywordAnimes:"+list.toString());
+        return Result.success(list);
+    }
+
+    @GetMapping("/update/recently")
+    public Result<List<AnimeCard2VO>> getRecentlyUpdateAnime(){
+        List <AnimeCard2VO> list =aniService.getRecentlyUpdate();
         return Result.success(list);
     }
 }

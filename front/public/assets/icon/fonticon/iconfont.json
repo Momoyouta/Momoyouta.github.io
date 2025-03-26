@@ -34,6 +34,13 @@
       "unicode_decimal": 58950
     },
     {
+      "icon_id": "2379110",
+      "name": "选项",
+      "font_class": "xuanxiang",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
       "icon_id": "2583881",
       "name": "叉叉",
       "font_class": "chacha",
@@ -46,6 +53,13 @@
       "font_class": "mulu",
       "unicode": "e608",
       "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "4258790",
+      "name": "选项",
+      "font_class": "xuanxiang1",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
     },
     {
       "icon_id": "4611765",

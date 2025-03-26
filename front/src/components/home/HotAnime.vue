@@ -8,7 +8,7 @@
     <div class="content">
       <ul class="ani-ul">
         <li v-for="(ani,index) in aniList" :key="index">
-          <AnimationCard style="width: 100%;font-size: 16px" :ani="ani.data" :show-con="ani.show"></AnimationCard>
+          <AnimationCard style="width: 100%;font-size: 1rem" :ani="ani.data" :show-con="ani.show"></AnimationCard>
         </li>
       </ul>
     </div>

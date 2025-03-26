@@ -2,6 +2,7 @@ package com.momoyouta.web_ani_server.service;
 
 import com.momoyouta.web_ani_common.result.Result;
 import com.momoyouta.web_ani_pojo.VO.AnimationDetailVO;
+import com.momoyouta.web_ani_pojo.VO.AnimeCard2VO;
 import com.momoyouta.web_ani_pojo.VO.AnimeKeywordSearchVO;
 import com.momoyouta.web_ani_pojo.dto.AniAddDTO;
 import com.momoyouta.web_ani_pojo.dto.DirCondition;
@@ -43,4 +44,6 @@ public interface AniService {
     public List<Animation> getByDirCondition(DirCondition dirCondition);
 
     List<AnimeKeywordSearchVO> searchAnimeByKeyword(String keyword,int offset,int pageSize);
+
+    List<AnimeCard2VO> getRecentlyUpdate();
 }
